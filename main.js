@@ -27,7 +27,7 @@ app.on('ready', function() {
   // call python
   var util  = require('util');
   var spawn = require('child_process').spawn;
-  var subpy = spawn('python', ['./hello.py']);
+  var subpy = spawn('python', ['./server.py']);
 
   subpy.stdout.on('data', function (buf) {
     console.log(`stdout: ${buf}`);

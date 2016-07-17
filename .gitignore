@@ -37,3 +37,6 @@ env/
 .env/
 *.pyc
 __pycache__
+
+# Keys
+auth/
