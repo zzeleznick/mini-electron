@@ -22,23 +22,9 @@ var products = [{
       rating: 3,
       price: 80
   }]
-const options = {defaultSortName : 'rating', defaultSortOrder : 'asc'};
+
 const fields = ["id", "name", "rating", "price"];
 const descriptions  = ["Product ID", "Product Name", "Product Rating", "Product Price"];
-
-const columnsMaker = (hiddenIndices) => { return fields.map( (el, idx) => {
-       const primary = true ? idx == 0 : false;
-       // console.log(descriptions[idx]);
-       const hidden = hiddenIndices.indexOf(idx) != -1;
-      return (<TableHeaderColumn key={idx} dataField={el} isKey={primary}
-        dataAlign="center" dataSort={true} hidden={hidden}>
-        { descriptions[idx] }
-      </TableHeaderColumn>);
-  });
-}
-var tableMaker = (hidden) => { return (<BootstrapTable data={products} options={options}>
-              { columnsMaker(hidden) }
-          </BootstrapTable>)};
 
 class CheckboxElement extends React.Component {
   constructor(props) {
@@ -95,15 +81,63 @@ class Panel extends React.Component {
   }
 }
 
+class AddRowButton extends React.Component {
+  render() {
+    const {action} = this.props;
+    return (
+      <button onClick={action}> Click Me </button>
+    );
+  }
+}
+
 class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onAddRow = this.onAddRow.bind(this);
+    this.addRow = this.addRow.bind(this);
+  }
+  onAddRow(row) {
+    console.log("ROW to be added", row);
+  }
+  addRow() {
+    const idx = Math.round(Math.random() * 100);
+    const rating = Math.round(1 + Math.random() * 4);
+    var fakeRow = {
+      id: idx,
+      name: `Product ${idx}`,
+      rating: rating,
+      price: rating * 5
+    };
+    var err = this.refs.table.handleAddRowAtBegin(fakeRow);
+    if(err){  // i.e: doesn't assign row key or unique row key
+          console.log(err);
+    }
+    else { // add the new row to our primitive data store
+      products.push(fakeRow);
+    }
+  }
   render() {
     const { onShow, onHide, main } = this.props;
     const indices = main.indices;
+    const options = {defaultSortName : 'rating', defaultSortOrder : 'asc', onAddRow: this.onAddRow};
+    const columnsMaker = (hiddenIndices) => { return fields.map( (el, idx) => {
+      const primary = true ? idx == 0 : false;
+       // console.log(descriptions[idx]);
+       const hidden = hiddenIndices.indexOf(idx) != -1;
+      return (<TableHeaderColumn key={idx} dataField={el} isKey={primary}
+        dataAlign="center" dataSort={true} hidden={hidden}>
+        { descriptions[idx] }
+      </TableHeaderColumn>);
+      });
+    }
     return (
       <div className="index">
         <div className="notice">Please edit <code>src/components/Main.js</code> to get started!</div>
-        { tableMaker(indices) }
+        <BootstrapTable ref="table" data={products} options={options} insertRow={false}>
+                  { columnsMaker(indices) }
+        </BootstrapTable>
         <Panel showAction={onShow} hideAction={onHide} />
+        <AddRowButton action={() => {this.addRow()} } />
       </div>
     );
   }
