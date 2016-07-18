@@ -5,7 +5,8 @@ import { OAuthSignInButton } from "redux-auth";
 
 var reg;
 var sub;
-var REG_KEY = null
+var REG_KEY = null;
+var USERNAME = null;
 var isSubscribed = false;
 
 const URL = 'http://localhost:5555/api';
@@ -47,6 +48,41 @@ const notify = () => {
     makeRequest(notifyURL, args);
 }
 
+const showUserData = (user) => {
+  if (user != null) {
+    user.providerData.forEach(function (profile) {
+      console.log("Profile", profile);
+      console.log("Sign-in provider: " + profile.providerId);
+      console.log("Provider-specific UID: " + profile.uid);
+      USERNAME = profile.displayName != null ? profile.displayName
+            :  profile.uid;
+      console.log("Name: " + profile.displayName);
+      console.log("Email: " + profile.email);
+      console.log("Photo URL: " + profile.photoURL);
+    });
+  }
+  else {
+    console.log("User is null")
+  }
+}
+var provider = new firebase.auth.GithubAuthProvider();
+provider.addScope('user:email');
+
+firebase.auth().signInWithPopup(provider).then(function(result) {
+  // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+  var token = result.credential.accessToken;
+  // The signed-in user info.
+  var user = result.user;
+  console.log("USER", user);
+  showUserData(user);
+}).catch(function(error) {
+  // Handle Errors here.
+  console.warn("ERROR", error);
+  console.warn("message: ", error.message);
+  // The firebase.auth.AuthCredential type that was used.
+  var credential = error.credential;
+});
+
 class SubscribeComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -64,7 +100,7 @@ class SubscribeComponent extends React.Component {
         REG_KEY = buckets[buckets.length-1];
         console.log('Subscribed! Reg Key:', REG_KEY);
         // Send the registration key
-        saveSubscription("zach", REG_KEY);
+        saveSubscription(USERNAME, REG_KEY);
         // update button
         subscribeButton.textContent = 'Unsubscribe';
         isSubscribed = true;
