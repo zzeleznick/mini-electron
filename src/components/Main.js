@@ -4,6 +4,8 @@ require('styles/Main.css');
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import SubscribeComponent from './SubscribeComponent';
+
+
 let yeomanImage = require('../images/yeoman.png');
 const yeoman = (<img src={yeomanImage} alt="Yeoman Generator" />);
 var products = [{
@@ -226,6 +228,7 @@ class Main extends React.Component {
       });
     }
     const {rows} = this.state;
+    const button = <AddRowButton action={() => {this.addRow()} } />
     return (
       <div className="index">
         <div className="notice">Please edit <code>src/components/Main.js</code> to get started!</div>
@@ -233,7 +236,6 @@ class Main extends React.Component {
                   { columnsMaker(indices) }
         </BootstrapTable>
         <Panel showAction={onShow} hideAction={onHide} />
-        <AddRowButton action={() => {this.addRow()} } />
         <SubscribeComponent />
       </div>
     );

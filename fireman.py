@@ -1,15 +1,19 @@
-import json
+import requests, json
 from firebase import firebase
+import copy
 import random
 
 FB_URL = "https://rabbit-af6d6.firebaseio.com/"
 FIELDS = ["id", "name", "rating", "price"]
+FCM_KEY = None
 FB = None
 
 def get_auth():
+    global FCM_KEY
     with open("auth/db.json", "r") as infile:
         data = json.load(infile)
         secret = data["secret"]
+        FCM_KEY = data["fcm"]
     auth = firebase.FirebaseAuthentication(secret, None)
     return auth
 
@@ -54,6 +58,23 @@ def put_dummy_data(count = 1):
     bulk = make_dummy_data(count)
     for (idx, data) in bulk.iteritems():
         put(idx, data)
+
+def put_user(name, key, extra={}):
+    payload = copy.deepcopy(extra)
+    payload["key"] = key
+    payload["name"] = name
+    return FB.put("/users", name, payload)
+
+def send_notifcation(regKey):
+    if not FCM_KEY:
+        raise(IOError("Missing FCM Key"))
+    headers = {"Authorization": "key=%s" % FCM_KEY,
+              "Content-Type": "application/json",
+              }
+    url = "https://fcm.googleapis.com/fcm/send"
+    data = {"to": regKey, "priority": "high"}
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    return response
 
 def put(name, data):
     return FB.put("/results", name, data)

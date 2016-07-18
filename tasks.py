@@ -30,6 +30,14 @@ def sub(x, y):
 def post_dummy_data(count = 1):
     put_dummy_data(count)
 
+@celery.task
+def post_user(name, regKey, extra={}):
+    return put_user(name, regKey, extra)
+
+@celery.task
+def trigger_notifcation(regKey):
+    return send_notifcation(regKey)
+
 if __name__ == '__main__':
     logger.warn("Called as Main")
     logger.warn("Should call with `celery` command")

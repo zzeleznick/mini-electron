@@ -14,12 +14,15 @@ self.addEventListener('activate', function(event) {
 
 self.addEventListener('push', function(event) {
   console.log('Push message', event);
-
-  var title = 'Push message';
+  if (event.data) {
+    const dataText = event.data.text();
+    console.warn("We got text", dataText)
+  }
+  var title = 'TestRunner';
 
   event.waitUntil(
     self.registration.showNotification(title, {
-      'body': 'The Message',
+      'body': 'New Test Results',
       'icon': 'favicon.ico'
     }));
 });

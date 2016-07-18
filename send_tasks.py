@@ -16,4 +16,3 @@ def make_request(url, args=[], kws={}):
 def post_dummy_data(count = 1):
     url = get_async_endpoint("post_dummy_data")
     return make_request(url, [count])
-
