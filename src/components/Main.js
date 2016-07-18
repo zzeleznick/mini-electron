@@ -7,27 +7,27 @@ import SubscribeComponent from './SubscribeComponent';
 
 
 let yeomanImage = require('../images/yeoman.png');
-const yeoman = (<img src={yeomanImage} alt="Yeoman Generator" />);
+const yeoman = (<img src={yeomanImage} alt='Yeoman Generator' />);
 var products = [{
       id: 1,
-      name: "Item name 1",
+      name: 'Item name 1',
       rating: 5,
       price: 150
   },{
       id: 2,
-      name: "Item name 2",
+      name: 'Item name 2',
       rating: 4,
       price: 120
   },
   {
       id: 3,
-      name: "Item name 3",
+      name: 'Item name 3',
       rating: 3,
       price: 80
   }]
 
-const fields = ["id", "name", "rating", "price"];
-const descriptions  = ["Product ID", "Product Name", "Product Rating", "Product Price"];
+const fields = ['id', 'name', 'rating', 'price'];
+const descriptions  = ['Product ID', 'Product Name', 'Product Rating', 'Product Price'];
 const firebaseRef = firebase.database().ref('/results');
 var productIDs = [];
 
@@ -41,7 +41,7 @@ class CheckboxElement extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
   handleChange(event) {
-    // console.log("Yooo", event.target.checked);
+    // console.log('Yooo', event.target.checked);
     const {index, handleShow, handleHide} = this.props;
     const active =  event.target.checked;
     this.setState({ checked: active});
@@ -57,7 +57,7 @@ class CheckboxElement extends React.Component {
     const { checked } = this.state;
     return (
       <label>
-        <input type="checkbox" onChange={this.handleChange} checked={checked} value={"checkbox_" + index}/> { text }
+        <input type='checkbox' onChange={this.handleChange} checked={checked} value={'checkbox_' + index}/> { text }
       </label>
     );
   }
@@ -113,15 +113,15 @@ class Main extends React.Component {
     this.addRow = this.addRow.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.updateRows = this.updateRows.bind(this);
-    this.state  = {"init": false, "rows": products};
+    this.state  = {'init': false, 'rows': products};
   }
   onAddRow(row) {
-    console.log("ROW to be added", row);
+    console.log('ROW to be added', row);
   }
   onPageChange(idx, pageSize) {
     const startingRow = 1 + (idx - 1) * pageSize
     const endingRow = Math.min(startingRow + pageSize, 100)
-    console.log("Showing Results", startingRow, " - ", endingRow);
+    console.log('Showing Results', startingRow, ' - ', endingRow);
   }
 
   addRow(data = undefined, start = false) {
@@ -145,41 +145,41 @@ class Main extends React.Component {
     }
   }
   updateRows(rows) {
-    this.setState({"rows": rows});
+    this.setState({'rows': rows});
   }
   componentDidMount() {
     // child added also get the initial data
-    console.warn("Listener Activated");
+    console.warn('Listener Activated');
     const {init} = this.state;
     const updateRows = this.updateRows;
     // const addTableRow = this.addRow // add row is jank
-    firebaseRef.on("child_added", function(snapshot, prevChildKey) {
+    firebaseRef.on('child_added', function(snapshot, prevChildKey) {
         if (!init) {
-          console.log("No init yet");
+          console.log('No init yet');
           return
         }
         var item = snapshot.val();
-        const idx = item["id"];
+        const idx = item['id'];
         if (productIDs.indexOf(idx) == -1) {
           // not added, add the product
           const err = null // addTableRow(item, false);
-          if (err) { console.error("ERROR", err)}
+          if (err) { console.error('ERROR', err)}
           else {
             productIDs.push(idx);
             products.push(item);
             updateRows(products);
-            console.log("New item", item);
+            console.log('New item', item);
           }
         }
     });
-    firebaseRef.on("child_removed", function(snapshot) {
+    firebaseRef.on('child_removed', function(snapshot) {
       var item = snapshot.val();
       var idx = null;
       try
-         { idx = item["id"];}
-      catch(err) { console.warn("ERROR", err); }
+         { idx = item['id'];}
+      catch(err) { console.warn('ERROR', err); }
       if (idx == null) {
-        console.warn("Child has no id key", item);
+        console.warn('Child has no id key', item);
         return
       }
       const pos = productIDs.indexOf(idx);
@@ -196,19 +196,19 @@ class Main extends React.Component {
   componentWillMount(){
     products = []; // reset from initial
     firebaseRef.once('value', function(snapshot) {
-      console.log("FB once activated");
+      console.log('FB once activated');
       snapshot.forEach(function(childSnapshot) {
         var item = childSnapshot.val();
-        const idx = item["id"];
+        const idx = item['id'];
         if (productIDs.indexOf(idx) == -1) {
           // not added, add the product
           productIDs.push(idx);
           products.push(item);
         }
       })
-      console.log("FB once De-activated");
+      console.log('FB once De-activated');
     });
-    this.setState({"rows": products});
+    this.setState({'rows': products});
     this.setState({ init: true });
   }
   render() {
@@ -222,7 +222,7 @@ class Main extends React.Component {
        // console.log(descriptions[idx]);
        const hidden = hiddenIndices.indexOf(idx) != -1;
       return (<TableHeaderColumn key={idx} dataField={el} isKey={primary}
-        dataAlign="center" dataSort={true} hidden={hidden}>
+        dataAlign='center' dataSort={true} hidden={hidden}>
         { descriptions[idx] }
       </TableHeaderColumn>);
       });
@@ -230,9 +230,9 @@ class Main extends React.Component {
     const {rows} = this.state;
     const button = <AddRowButton action={() => {this.addRow()} } />
     return (
-      <div className="index">
-        <div className="notice">Please edit <code>src/components/Main.js</code> to get started!</div>
-        <BootstrapTable ref="table" data={rows} options={options} pagination={true}>
+      <div className='index'>
+        <div className='notice'>Please edit <code>src/components/Main.js</code> to get started!</div>
+        <BootstrapTable ref='table' data={rows} options={options} pagination={true}>
                   { columnsMaker(indices) }
         </BootstrapTable>
         <Panel showAction={onShow} hideAction={onHide} />

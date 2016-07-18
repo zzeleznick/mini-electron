@@ -3,10 +3,10 @@ import React from 'react';
 
 const URL = 'http://localhost:5555/api';
 const TASK_ENDPOINT = (name) => {
-    return URL + "/task/async-apply/tasks." + name;
+    return URL + '/task/async-apply/tasks.' + name;
 }
 
-const postURL = TASK_ENDPOINT("post_dummy_data");
+const postURL = TASK_ENDPOINT('post_dummy_data');
 
 const makeRequest = () => {
   fetch(postURL, {
@@ -31,7 +31,7 @@ const makeRequest = () => {
 class NameComponent extends React.Component {
   render() {
     return (
-      <div className="btn btn-warning" onClick={makeRequest}>Post Row</div>
+      <div className='btn btn-warning' onClick={makeRequest}>Post Row</div>
     );
   }
 }

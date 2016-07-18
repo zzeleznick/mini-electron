@@ -2,6 +2,17 @@
 'use strict';
 
 // console.log('SW Started', self);
+var TITLE = 'TestRunner';
+var BODY = 'New Test Results';
+var URL = "http://google.com";
+
+self.addEventListener('message', function (evt) {
+  console.log('postMessage received', evt.data);
+  const username = evt.data.username;
+  if (username) {
+    BODY = "New Test Results for " + username;
+  }
+})
 
 self.addEventListener('install', function(event) {
   self.skipWaiting();
@@ -18,11 +29,10 @@ self.addEventListener('push', function(event) {
     const dataText = event.data.text();
     console.warn("We got text", dataText)
   }
-  var title = 'TestRunner';
 
   event.waitUntil(
-    self.registration.showNotification(title, {
-      'body': 'New Test Results',
+    self.registration.showNotification(TITLE, {
+      'body': BODY,
       'icon': 'favicon.ico'
     }));
 });
@@ -32,7 +42,7 @@ self.addEventListener('notificationclick', function(event) {
   // Android doesn't close the notification when you click it
   // See http://crbug.com/463146
   event.notification.close();
-  var url = 'https://youtu.be/gYMkEMCHtJ4';
+  var url = URL;
   // Check if there's already a tab open with this URL.
   // If yes: focus on the tab.
   // If no: open a tab with the URL.
