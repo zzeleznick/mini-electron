@@ -122,6 +122,7 @@ class Main extends React.Component {
   }
 
   addRow(data = undefined, start = false) {
+    return // DO not call this function
     var row = null;
     if (data == undefined) {
       row = makeFakeRow()
@@ -168,11 +169,29 @@ class Main extends React.Component {
           }
         }
     });
+    firebaseRef.on("child_removed", function(snapshot) {
+      var item = snapshot.val();
+      var idx = null;
+      try
+         { idx = item["id"];}
+      catch(err) { console.warn("ERROR", err); }
+      if (idx == null) {
+        console.warn("Child has no id key", item);
+        return
+      }
+      const pos = productIDs.indexOf(idx);
+      if ( pos != -1) {
+        productIDs = productIDs.slice(0, pos).concat(productIDs.slice(pos+1));
+        products = products.slice(0, pos).concat(products.slice(pos+1));
+        updateRows(products);
+      }
+    });
   }
   componentWillUnmount() {
     firebaseRef.off();
   }
   componentWillMount(){
+    products = []; // reset from initial
     firebaseRef.once('value', function(snapshot) {
       console.log("FB once activated");
       snapshot.forEach(function(childSnapshot) {
