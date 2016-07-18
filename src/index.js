@@ -12,5 +12,3 @@ render(
   </Provider>,
   document.getElementById('app')
 );
-
-// curl "https://android.googleapis.com/gcm/send" --request POST --header "Authorization: key=AIzaSyDakjHRlsttwpcvtXpkMHWw1wL0SO4co5Y" --header "Content-Type: application/json"  -d "{\"registration_ids\":[\"291834614873\"]}"
