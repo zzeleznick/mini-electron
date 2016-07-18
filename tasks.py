@@ -3,6 +3,7 @@ import time
 import logging
 import coloredlogs
 from celery import Celery
+from fireman import *
 
 celery = Celery('tasks')
 celery.config_from_object({
@@ -26,8 +27,8 @@ def sub(x, y):
     return x - y
 
 @celery.task
-def post(message):
-    return message
+def post_dummy_data(count = 1):
+    put_dummy_data(count)
 
 if __name__ == '__main__':
     logger.warn("Called as Main")
