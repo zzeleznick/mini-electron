@@ -7,15 +7,32 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="http://allenfang.github.io/react-bootstrap-table/stylesheets/react-bootstrap-table-all.min.css">
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://allenfang.github.io/react-bootstrap-table/stylesheets/react-bootstrap-table-all.min.css">
 
 </head>
 <body>
   <div id="app">APPLICATION CONTENT</div>
 
   <script>__REACT_DEVTOOLS_GLOBAL_HOOK__ = parent.__REACT_DEVTOOLS_GLOBAL_HOOK__</script>
+  <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase.js"></script>
+  <!-- ReactFire -->
+  <script src="https://cdn.firebase.com/libs/reactfire/1.0.0/reactfire.min.js"></script>
+  <!-- Initialize the Firebase SDK -->
+    <script>
+      var config = {
+        apiKey: "21bd0hNhg73zMmSsmWB0bnXJMiFOQ9gPmenKlQRG",
+        // apiKey: "c905ffe3f4c586348264df58f6b44e5a9c714004",
+        // authDomain: "rabbit-af6d6.firebaseapp.com",
+        databaseURL: "https://rabbit-af6d6.firebaseio.com"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <link rel="manifest" href="/manifest.json">
+
   <script type="text/javascript" src="/assets/app.js"></script>
+
 </body>
 </html>

@@ -3,6 +3,7 @@ require('styles/App.css');
 require('styles/Main.css');
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import SubscribeComponent from './SubscribeComponent';
 let yeomanImage = require('../images/yeoman.png');
 const yeoman = (<img src={yeomanImage} alt="Yeoman Generator" />);
 var products = [{
@@ -233,6 +234,7 @@ class Main extends React.Component {
         </BootstrapTable>
         <Panel showAction={onShow} hideAction={onHide} />
         <AddRowButton action={() => {this.addRow()} } />
+        <SubscribeComponent />
       </div>
     );
   }
