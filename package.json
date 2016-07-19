@@ -63,6 +63,9 @@
   },
   "dependencies": {
     "core-js": "^2.0.0",
+    "font-awesome": "^4.6.3",
+    "font-awesome-webpack": "0.0.4",
+    "less": "^2.7.1",
     "normalize.css": "^4.0.0",
     "react": "^15.0.0",
     "react-bootstrap-table": "^2.3.8",

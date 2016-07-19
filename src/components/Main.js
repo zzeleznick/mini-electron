@@ -236,7 +236,6 @@ class Main extends React.Component {
                   { columnsMaker(indices) }
         </BootstrapTable>
         <Panel showAction={onShow} hideAction={onHide} />
-        <SubscribeComponent />
       </div>
     );
   }

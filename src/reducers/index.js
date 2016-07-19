@@ -8,5 +8,9 @@
  */
 import { combineReducers } from 'redux';
 /* Populated by react-webpack-redux:reducer */
-const reducers = { main: require('../reducers/main.js') };
+const reducers = {
+  main: require('../reducers/main.js'),
+  loginHandler: require('../reducers/loginHandler.js'),
+  subscribeHandler: require('../reducers/subscribeHandler.js'),
+};
 module.exports = combineReducers(reducers);

@@ -1,3 +1,10 @@
 /* Populated by react-webpack-redux:action */
 export const HIDE = 'HIDE';
 export const SHOW = 'SHOW';
+export const SUBSCRIBE = 'SUBSCRIBE';
+export const UNSUBSCRIBE = 'UNSUBSCRIBE';
+export const SIGNIN = 'SIGNIN';
+export const SIGNOUT = 'SIGNOUT';
+export const NOTIFY = 'NOTIFY';
+export const AUTH_INIT = 'AUTH_INIT';
+export const SUB_INIT = 'SUB_INIT';
