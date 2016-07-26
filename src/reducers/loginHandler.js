@@ -6,29 +6,48 @@
 import {SIGNIN, SIGNOUT, AUTH_INIT} from '../actions/const';
 const initialState = {loggedin: false, userid: null, username: null};
 
+const auth_complete = (uid, name) => {
+  console.log("Auth complete called");
+  return { type: "auth_complete", userid: uid, username: name }
+}
+
+const auth_revoke = () => {
+  return { type: "auth_revoke"}
+}
+
 module.exports = function(state = initialState, action) {
   /* Keep the reducer clean - do not mutate the original state. */
   let nextState = Object.assign({}, state);
-
   switch(action.type) {
+    case "auth_complete": {
+      const {userid, username} = action;
+      nextState.loggedin = true;
+      nextState.userid = userid;
+      nextState.username = username;
+      return nextState;
+    }
+    case "auth_revoke": {
+      return initialState;
+    }
     case AUTH_INIT: {
+      // return dispatch => {
       const callback = action.callback;
       firebase.auth().onAuthStateChanged(function(user) {
         console.log('Auth state changed');
         if (user) {
           // User is signed in.
-          nextState.loggedin = true;
           console.log('User is signed in');
           const profile = user.providerData[0];
           const userid = profile.uid;
           const username = profile.displayName != null ? profile.displayName :  profile.uid;
-          nextState.userid = userid;
-          nextState.username = username;
+          // dispatch(auth_complete(userid, username));
+          // store.dispatch(auth_complete(userid, username));
+          nextState = dispatch(auth_complete(userid, username));
           callback(user);
         } else {
           // No user is signed in.
           console.log('User is not signed in');
-          nextState = Object.assign({}, initialState);
+          dispatch(auth_revoke());
         }
       });
        console.log("Post State Change:", nextState);
@@ -42,8 +61,7 @@ module.exports = function(state = initialState, action) {
       }, function(error) {
         console.warn('Signout error');
       });
-      nextState = Object.assign({}, initialState);
-      return nextState;
+      return initialState;
     }
     case SIGNIN: {
       const callback = action.callback;
@@ -59,9 +77,7 @@ module.exports = function(state = initialState, action) {
         const profile = user.providerData[0];
         const userid = profile.uid;
         const username = profile.displayName != null ? profile.displayName :  profile.uid;
-        nextState.userid = userid;
-        nextState.username = username;
-        nextState.loggedin = true;
+        dispatch(auth_complete(userid, username));
         callback(user);
       }).catch(function(error) {
         // Handle Errors here.
@@ -69,6 +85,7 @@ module.exports = function(state = initialState, action) {
         console.warn('message: ', error.message);
         // The firebase.auth.AuthCredential type that was used.
         var credential = error.credential;
+        dispatch(auth_revoke());
       });
       console.log("Post pop-up", nextState);
       return nextState;

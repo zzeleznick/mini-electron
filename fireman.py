@@ -2,9 +2,10 @@ import requests, json
 from firebase import firebase
 import copy
 import random
+import uuid
 
 FB_URL = "https://rabbit-af6d6.firebaseio.com/"
-FIELDS = ["id", "name", "rating", "price"]
+FIELDS = ["id", "uuid", "name", "rating", "price"]
 FCM_KEY = None
 FB = None
 
@@ -35,6 +36,7 @@ def make_dummy_data(count = 1):
             idx = random.randint(0,10**6)
             rating = random.randint(1,5)
             data = {"id": idx,
+                    "uuid": "%s" % uuid.uuid1(),
                     "name": "Result %s" % idx,
                     "rating": rating,
                     "price": rating * 30}
