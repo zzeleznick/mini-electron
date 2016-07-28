@@ -113,6 +113,7 @@ class Main extends React.Component {
     this.addRow = this.addRow.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.updateRows = this.updateRows.bind(this);
+    this.bindChildAdded = this.bindChildAdded.bind(this);
     this.state  = {'init': false, 'rows': products};
   }
   onAddRow(row) {
@@ -147,17 +148,10 @@ class Main extends React.Component {
   updateRows(rows) {
     this.setState({'rows': rows});
   }
-  componentDidMount() {
-    // child added also get the initial data
-    console.warn('Listener Activated');
-    const {init} = this.state;
+  bindChildAdded(){
     const updateRows = this.updateRows;
     // const addTableRow = this.addRow // add row is jank
     firebaseRef.on('child_added', function(snapshot, prevChildKey) {
-        if (!init) {
-          console.log('No init yet');
-          return
-        }
         var item = snapshot.val();
         const idx = item['id'];
         if (productIDs.indexOf(idx) == -1) {
@@ -172,6 +166,11 @@ class Main extends React.Component {
           }
         }
     });
+  }
+  componentDidMount() {
+    // child added also get the initial data
+    console.warn('Listener Activated');
+    const updateRows = this.updateRows;
     firebaseRef.on('child_removed', function(snapshot) {
       var item = snapshot.val();
       var idx = null;
@@ -195,8 +194,10 @@ class Main extends React.Component {
   }
   componentWillMount(){
     products = []; // reset from initial
+    const updateRows = this.updateRows;
     firebaseRef.once('value', function(snapshot) {
       console.log('FB once activated');
+      console.log("Children Count", snapshot.numChildren());
       snapshot.forEach(function(childSnapshot) {
         var item = childSnapshot.val();
         const idx = item['id'];
@@ -207,9 +208,11 @@ class Main extends React.Component {
         }
       })
       console.log('FB once De-activated');
+      updateRows(products);
     });
-    this.setState({'rows': products});
+
     this.setState({ init: true });
+    // this.bindChildAdded();
   }
   render() {
     const { onShow, onHide, main } = this.props;
@@ -232,7 +235,7 @@ class Main extends React.Component {
     return (
       <div className='index'>
         <div className='notice'>Please edit <code>src/components/Main.js</code> to get started!</div>
-        <BootstrapTable ref='table' data={rows} options={options} pagination={true}>
+        <BootstrapTable ref='table' data={rows} search={true} options={options} pagination={true}>
                   { columnsMaker(indices) }
         </BootstrapTable>
         <Panel showAction={onShow} hideAction={onHide} />

@@ -2,6 +2,7 @@ import requests, json
 from firebase import firebase
 import copy
 import random
+import uuid, string
 
 FB_URL = "https://rabbit-af6d6.firebaseio.com/"
 FIELDS = ["id", "name", "rating", "price"]
@@ -29,13 +30,21 @@ get_db()
 def dump_db():
     FB.put("/", "results", {})
 
-def make_dummy_data(count = 1):
+def make_string(length = 10):
+    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(length))
+
+def make_junk(length = 10):
+    return 'A' * length
+
+def make_dummy_data(count = 1, extraLength = 0):
     def inner():
         for i in range(count):
             idx = random.randint(0,10**6)
             rating = random.randint(1,5)
             data = {"id": idx,
+                    "uuid": "%s" % uuid.uuid1(),
                     "name": "Result %s" % idx,
+                    "junk": make_junk(extraLength),
                     "rating": rating,
                     "price": rating * 30}
             yield (idx, data)
@@ -45,12 +54,12 @@ def get(suffix, child_key = None, *args):
     result = FB.get(suffix, child_key, *args)
     return result if result else {}
 
-def populate_db(count = 50, drop = False):
+def populate_db(count = 50, drop = False, extraLength=0):
     if drop:
         original = {}
     else:
         original = get("/results")
-    bulk = make_dummy_data(count)
+    bulk = make_dummy_data(count, extraLength)
     original.update(bulk)
     return FB.put("/", "results", original)
 
